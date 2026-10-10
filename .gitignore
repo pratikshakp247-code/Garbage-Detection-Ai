@@ -3,3 +3,7 @@ dist/
 .env
 .vite/
 .DS_Store
+
+gpu_env/
+backend/Dataset/
+backend/__pycache__/
