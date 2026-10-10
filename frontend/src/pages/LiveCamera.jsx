@@ -39,8 +39,6 @@ export default function LiveCamera() {
         });
       }
     });
-    a.download = `Capture_CAM-04_${Date.now()}.png`;
-    a.click();
     setTimeout(() => setCaptured(false), 2000);
   };
 
