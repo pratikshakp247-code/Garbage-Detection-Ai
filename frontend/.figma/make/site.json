@@ -1,0 +1,10 @@
+{
+  "description": "Efficiently manage waste with an AI-powered detection system that provides real-time monitoring, analytics, and reporting for smart city initiatives.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
