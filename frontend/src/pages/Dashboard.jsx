@@ -25,7 +25,75 @@ import TrendChart from '../components/TrendChart.jsx';
 export default function Dashboard({ navigate }) {
     const [timeRange, setTimeRange] = useState("This week");
     const [chartMenuOpen, setChartMenuOpen] = useState(false);
+    const [mapHovered, setMapHovered] = useState(null);
     const timeRangeRef = useRef(null);
+
+    const dashboardMapMarkers = [
+      {
+        id: "m-hotspot",
+        top: "40%",
+        left: "20%",
+        className: "marker",
+        icon: Trash2,
+        type: "Garbage Hotspot",
+        tone: "#3B82F6",
+        title: "Central West Zone",
+        detail: "Plastic & Packaging Waste",
+        value: "42 kg detected",
+        time: "10:24 AM",
+        status: "Pickup Dispatched",
+        badge: "96% AI Verified",
+        popupPos: { top: "12px", left: "14px" }
+      },
+      {
+        id: "m-camera",
+        top: "65%",
+        left: "45%",
+        className: "marker",
+        icon: Camera,
+        type: "AI CCTV Camera",
+        tone: "#2563EB",
+        title: "Camera Station #04",
+        detail: "Optical Edge Detection",
+        value: "1080p Live Stream",
+        time: "Online",
+        status: "Active Surveillance",
+        badge: "2 items flagged",
+        popupPos: { top: "12px", left: "22%" }
+      },
+      {
+        id: "m-active",
+        top: "30%",
+        right: "35%",
+        className: "marker warning",
+        icon: Trash2,
+        type: "Active Collection",
+        tone: "#F59E0B",
+        title: "Market Square Smart Bin",
+        detail: "Mixed Recyclables & Paper",
+        value: "88% Bin Full",
+        time: "09:45 AM",
+        status: "Overflow Alert",
+        badge: "High Priority",
+        popupPos: { top: "12px", right: "14px" }
+      },
+      {
+        id: "m-clean",
+        top: "70%",
+        right: "20%",
+        className: "marker clean",
+        icon: Check,
+        type: "Sanitized Zone",
+        tone: "#10B981",
+        title: "Riverside Promenade",
+        detail: "Park & Public Walkway",
+        value: "0 kg (Clean)",
+        time: "Cleaned 08:30 AM",
+        status: "Fleet Verified",
+        badge: "100% Sanitized",
+        popupPos: { top: "52px", right: "14px" }
+      }
+    ];
 
     useEffect(() => {
       function handleClickOutside(event) {
@@ -144,17 +212,73 @@ export default function Dashboard({ navigate }) {
           </Card>
           
           <Card>
-            <SectionHead title="Live location map" detail="Active IoT zones & hot-spots" action={<button className="text-button" onClick={() => navigate("Map")}>Expand</button>} />
-            <div className="map-canvas" style={{height: '240px', margin: '0 20px 20px'}}>
+            <SectionHead 
+              title="Live location map" 
+              detail="Active IoT zones & hot-spots" 
+              action={<button className="text-button" onClick={() => navigate("Map")}>Expand <ArrowRight size={14} /></button>} 
+            />
+            <div className="map-canvas" style={{ height: '240px', margin: '0 20px 20px', position: 'relative' }}>
               <div className="map-water" />
               <div className="map-road road-one" />
               <div className="map-road road-two" />
               <div className="map-road road-three" />
-              <div className="marker" style={{ top: '40%', left: '20%' }}><Trash2 size={11} /></div>
-              <div className="marker" style={{ top: '65%', left: '45%' }}><Camera size={11} /></div>
-              <div className="marker warning" style={{ top: '30%', right: '35%' }}><Trash2 size={11} /></div>
-              <div className="marker clean" style={{ top: '70%', right: '20%' }}><Check size={11} /></div>
-              <div className="map-legend" style={{bottom: '10px', left: '10px'}}>
+
+              {/* Interactive Map Pins with Hover */}
+              {dashboardMapMarkers.map((m) => {
+                const Icon = m.icon;
+                const isHovered = mapHovered?.id === m.id;
+
+                return (
+                  <div
+                    key={m.id}
+                    className={`${m.className} interactive-map-pin ${isHovered ? "pin-active" : ""}`}
+                    style={{
+                      top: m.top,
+                      left: m.left,
+                      right: m.right,
+                      cursor: "pointer",
+                      zIndex: isHovered ? 25 : 5
+                    }}
+                    onMouseEnter={() => setMapHovered(m)}
+                    onMouseLeave={() => setMapHovered(null)}
+                    onClick={() => navigate("Map")}
+                  >
+                    <Icon size={12} />
+                  </div>
+                );
+              })}
+
+              {/* Floating Information Tooltip Card on Marker Hover */}
+              {mapHovered && (
+                <div
+                  className="map-marker-hover-popup"
+                  style={mapHovered.popupPos}
+                >
+                  <div className="popup-header-row">
+                    <span
+                      className="popup-type-tag"
+                      style={{
+                        background: `${mapHovered.tone}25`,
+                        color: mapHovered.tone
+                      }}
+                    >
+                      ● {mapHovered.type}
+                    </span>
+                    <span className="popup-time">{mapHovered.time}</span>
+                  </div>
+                  <b className="popup-location-title">{mapHovered.title}</b>
+                  <div className="popup-detail-row">
+                    <span>{mapHovered.detail}</span>
+                    <b style={{ color: mapHovered.tone }}>{mapHovered.value}</b>
+                  </div>
+                  <div className="popup-footer-row">
+                    <span className="popup-status">● {mapHovered.status}</span>
+                    <span className="popup-badge">{mapHovered.badge}</span>
+                  </div>
+                </div>
+              )}
+
+              <div className="map-legend" style={{ bottom: '10px', left: '10px' }}>
                  <span><i className="alert-dot" /> Hotspot</span>
                  <span><i className="warning-dot" /> Active</span>
                  <span><i className="clean-dot" /> Clean</span>

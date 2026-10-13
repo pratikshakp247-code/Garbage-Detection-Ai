@@ -52,6 +52,10 @@ export default function LiveCamera() {
             <div className="cam-sky" /><div className="cam-ground" /><div className="cam-tree tree-a" /><div className="cam-tree tree-b" />
             <div className="camera-overlay"><span>CAM-04 · Riverside Park</span><span><span className="rec-dot" /> {running ? "LIVE" : "PAUSED"} · 1080p</span></div>
             {running && <>
+              <div className="trash-shape bottle" style={{ left: '42%', bottom: '22%' }} />
+              <div className="trash-shape cup" style={{ right: '23%', left: 'auto', bottom: '29%' }} />
+              <div className="trash-shape peel" style={{ left: '22%', bottom: '17%' }} />
+              <div className="trash-shape glass" style={{ right: '39%', left: 'auto', bottom: '29%' }} />
               <div className="detect-box live-box-a" style={{left: '38%', bottom: '18%', width: '90px', height: '80px', borderColor: 'var(--blue)'}}><span style={{background: 'var(--blue-dark)'}}>Plastic bottle · 96%</span></div>
               <div className="detect-box live-box-b" style={{right: '19%', bottom: '25%', width: '90px', height: '80px', borderColor: 'var(--purple)'}}><span style={{background: 'var(--purple-dark)'}}>Paper cup · 88%</span></div>
               <div className="detect-box live-box-c" style={{left: '20%', bottom: '15%', width: '60px', height: '30px', borderColor: 'var(--orange)'}}><span style={{background: 'var(--orange-dark)'}}>Banana peel · 92%</span></div>

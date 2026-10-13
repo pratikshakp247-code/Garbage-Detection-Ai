@@ -40,6 +40,28 @@ export default function Detection() {
     setDetected(false);
   };
 
+  const scoreSlices = [
+    { name: "Plastic Waste", count: 2, percent: 0.4, color: "var(--blue)" },
+    { name: "Paper Waste", count: 1, percent: 0.2, color: "var(--purple)" },
+    { name: "Organic Waste", count: 1, percent: 0.2, color: "var(--orange)" },
+    { name: "Glass Waste", count: 1, percent: 0.2, color: "var(--green)" }
+  ];
+
+  let currentPct = 0;
+  const svgScoreSlices = scoreSlices.map(slice => {
+    if (slice.percent === 0) return { ...slice, path: "" };
+    if (slice.percent >= 1) return { ...slice, path: "M 1 0 A 1 1 0 1 1 -1 0 A 1 1 0 1 1 1 0 Z" };
+
+    const startX = Math.cos(2 * Math.PI * (currentPct - 0.25));
+    const startY = Math.sin(2 * Math.PI * (currentPct - 0.25));
+    currentPct += slice.percent;
+    const endX = Math.cos(2 * Math.PI * (currentPct - 0.25));
+    const endY = Math.sin(2 * Math.PI * (currentPct - 0.25));
+    const largeArcFlag = slice.percent > 0.5 ? 1 : 0;
+    const path = `M 0 0 L ${startX} ${startY} A 1 1 0 ${largeArcFlag} 1 ${endX} ${endY} Z`;
+    return { ...slice, path };
+  });
+
   return <div className="page-content">
       <div className="welcome-row"><div><div className="welcome-title">Garbage detection</div><div className="welcome-sub">Upload a street image or connect a camera for instant AI analysis.</div></div><div className="status-pill"><span /> AI model online</div></div>
       <div className="detection-layout">
@@ -72,8 +94,25 @@ export default function Detection() {
           <SectionHead title="Detection results" detail={detected ? "5 objects identified in 1.12 seconds" : "Results will appear here"} action={detected ? <div className="success-icon"><Check size={15} /></div> : null} />
           {detected ? <>
               <div className="result-score">
-                <div className="score-ring" style={{background: 'radial-gradient(circle, var(--surface) 59%, transparent 61%), conic-gradient(var(--blue) 0 40%, var(--purple) 40% 60%, var(--orange) 60% 80%, var(--green) 80% 100%)'}}>
-                  <b>5</b><span>Objects found</span>
+                <div className="score-ring" style={{background: 'transparent', position: 'relative'}}>
+                  <svg viewBox="-1 -1 2 2" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', borderRadius: '50%' }}>
+                    {svgScoreSlices.map((slice) => (
+                      <path 
+                        key={slice.name} 
+                        d={slice.path} 
+                        fill={slice.color} 
+                        style={{ cursor: 'pointer', transition: 'opacity 0.2s' }} 
+                        onMouseEnter={(e) => e.target.style.opacity = 0.8} 
+                        onMouseLeave={(e) => e.target.style.opacity = 1}
+                      >
+                        <title>{`${slice.name}: ${slice.count} (${(slice.percent * 100).toFixed(0)}%)`}</title>
+                      </path>
+                    ))}
+                  </svg>
+                  <div style={{ background: 'var(--surface)', width: '85%', height: '85%', borderRadius: '50%', position: 'absolute', zIndex: 5 }}></div>
+                  <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <b>5</b><span>Objects found</span>
+                  </div>
                 </div>
               </div>
               <div className="result-items" style={{maxHeight: "180px", overflowY: "auto"}}>
