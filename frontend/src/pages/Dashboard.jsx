@@ -304,7 +304,7 @@ export default function Dashboard({ navigate }) {
                   </div>
                   <div className="activity-meta">
                     <span className={`status-indicator ${act.status === "Active" ? "active" : "offline"}`}>{act.status}</span>
-                    <span style={{fontSize: '14px', color: 'var(--muted)', marginTop: '4px'}}>{act.time}</span>
+                    <span style={{fontSize: '15px', color: 'var(--muted)', marginTop: '4px'}}>{act.time}</span>
                   </div>
                 </div>
               ))}

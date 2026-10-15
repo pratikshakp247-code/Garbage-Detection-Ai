@@ -32,6 +32,10 @@ export default function Header({ onMenu, onLogout }) {
   const currentDate = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [accountInfo, setAccountInfo] = useState(() => ({
+    name: localStorage.getItem("currentUser") || "Alex Morgan",
+    email: localStorage.getItem("currentUserEmail") || "alex@greencity.gov",
+  }));
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -46,8 +50,17 @@ export default function Header({ onMenu, onLogout }) {
     };
   }, []);
 
-  const currentUserName = localStorage.getItem('currentUser') || 'Alex Morgan';
-  const currentUserEmail = localStorage.getItem('currentUserEmail') || 'alex@greencity.gov';
+  useEffect(() => {
+    const refreshAccountInfo = () => setAccountInfo({
+      name: localStorage.getItem("currentUser") || "Alex Morgan",
+      email: localStorage.getItem("currentUserEmail") || "alex@greencity.gov",
+    });
+    window.addEventListener("profileUpdated", refreshAccountInfo);
+    return () => window.removeEventListener("profileUpdated", refreshAccountInfo);
+  }, []);
+
+  const currentUserName = accountInfo.name;
+  const currentUserEmail = accountInfo.email;
   const userInitials = currentUserName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
 
   const handleSearch = (e) => {

@@ -80,7 +80,7 @@ export default function VehiclesPage() {
         action={<Button onClick={toggleMap}><MapPin size={16} /> {fullMap ? "Collapse Map" : "Fleet Map View"}</Button>}
       />
 
-      <div className="grid" style={{ gridTemplateColumns: 'repeat(5, 1fr)', marginBottom: '24px' }}>
+      <div className="grid fleet-stats-grid" style={{ marginBottom: '24px' }}>
         <StatCard label="Total Vehicles" value={stats.total} icon={Truck} tone="purple" />
         <StatCard label="Active / On Route" value={stats.active} icon={Navigation} tone="blue" />
         <StatCard label="Idle / At Depot" value={stats.idle} icon={Clock3} tone="orange" />

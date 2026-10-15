@@ -113,14 +113,14 @@ export default function AlertsPage() {
       />
 
       {/* Summary Cards */}
-      <div className="grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)', marginBottom: '24px', gap: '16px' }}>
+      <div className="grid alerts-summary-grid">
         <StatCard label="Total Active Alerts" value={stats.active} icon={AlertTriangle} tone="red" />
         <StatCard label="High Priority" value={stats.highPriority} icon={AlertOctagon} tone="orange" />
         <StatCard label="In Progress" value={stats.inProgress} icon={Clock3} tone="blue" />
         <StatCard label="Resolved Today" value={stats.resolvedToday} icon={CheckCircle} tone="green" />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.8fr) minmax(280px, 0.7fr)', gap: '24px', marginBottom: '24px' }}>
+      <div className="alerts-layout">
         
         {/* Main Content (Filters + Table) */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', minWidth: 0 }}>

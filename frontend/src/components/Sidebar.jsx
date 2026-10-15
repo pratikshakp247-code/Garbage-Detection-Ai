@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Activity, AlertTriangle, ArrowRight, BarChart3, Bell, Bot, Calendar, Camera, Minus,
   Check, CheckCircle, RefreshCw, ChevronDown, ChevronRight, CircleUserRound, Clock3, Cpu, Database,
@@ -23,8 +23,14 @@ import TrendChart from './TrendChart.jsx';
 import { NavLink } from "react-router-dom";
 
 export default function Sidebar({ open, onClose, onLogout }) {
-  const currentUserName = localStorage.getItem('currentUser') || 'Alex Morgan';
+  const [currentUserName, setCurrentUserName] = useState(() => localStorage.getItem("currentUser") || "Alex Morgan");
   const userInitials = currentUserName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+
+  useEffect(() => {
+    const refreshUserName = () => setCurrentUserName(localStorage.getItem("currentUser") || "Alex Morgan");
+    window.addEventListener("profileUpdated", refreshUserName);
+    return () => window.removeEventListener("profileUpdated", refreshUserName);
+  }, []);
 
   return <>
       {open && <button className="sidebar-overlay" onClick={onClose} aria-label="Close navigation" />}
